@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Comment Remover</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+        }
+
+        .upload-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        .upload-box h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .upload-box p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .upload-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background-color: #2980b9;
+        }
+
+        .output-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .output-section a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .output-section a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Python Comment Remover</h1>
+        <p>Only .py files should be uploaded.</p>
+
+        <div class="upload-box">
+            <h2>Upload .py File</h2>
+            <p>Files stay private. Automatically deleted after processing.</p>
+            <input type="file" id="file-upload" accept=".py" style="display: none;">
+            <button class="upload-button" onclick="document.getElementById('file-upload').click()">Upload .py File</button>
+        </div>
+
+        <div class="output-section" id="output-section">
+            <h2>Processed File</h2>
+            <p>Download the processed file: <a id="download-link" href="#">output.py</a></p>
+        </div>
+
+        <footer>
+            <p>By using this service, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
+        </footer>
+    </div>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a .py file.');
+                return;
+            }
+
+            if (!file.name.endsWith('.py')) {
+                alert('Only .py files are allowed.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('File processing failed.');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.getElementById('download-link');
+                downloadLink.href = url;
+                downloadLink.download = 'output.py';
+
+                document.getElementById('output-section').style.display = 'block';
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+
+        document.getElementById('file-upload').addEventListener('change', uploadFile);
+    </script>
+</body>
+</html>
