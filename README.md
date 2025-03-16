@@ -60,6 +60,5 @@ Usage
     │-- main.py  # Core logic for comment removal
     │-- seen.html  # Web interface
     │-- README.md  # Project documentation
-    │-- requirements.txt  # Dependencies
     │-- uploads/  # Temporary storage for uploaded files
     │-- outputs/  # Processed files for download
